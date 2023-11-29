@@ -5,6 +5,7 @@
 idea/
 scratch/
 gitignore.py
+gitignore
 
 # Ignore cache
 /__pycache__/
