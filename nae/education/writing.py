@@ -35,7 +35,6 @@ def data_create(load_new_df=True):
     return df
 
 def investigator(df):
-    print(df.head())
 
     # Descriptive Statistics
     print("\nDescriptive Statistics:")
@@ -47,7 +46,7 @@ def investigator(df):
     plt.title('Distribution of Writing Scores by Native Language')
     plt.xlabel('Writing Score')
     plt.ylabel('Frequency')
-    # plt.show()
+    plt.show()
     return df
 
 def check_normality(df):
@@ -137,15 +136,15 @@ def box_whisker(df):
     plt.title('Boxplot of Writing Scores by Native Language')
     plt.xlabel('Native Language')
     plt.ylabel('Writing Score')
-    # plt.show()
+    plt.show()
     return df
 
 if __name__ == '__main__':
     MODEL = 'DEMO'
     df = data_create(load_new_df=False)
-    df = investigator(df)
-    df = check_normality(df)
-    df = one_way_anova(df)
+    # df = investigator(df)
+    # df = check_normality(df)
+    # df = one_way_anova(df)
     df = tukey_adhoc(df)
     df = effect_size(df)
     df = box_whisker(df)

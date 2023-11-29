@@ -6,6 +6,7 @@ import sys
 # from forex_python.converter import CurrencyRates
 
 fake = Faker()
+
 def generate_fake_cost_data(num_schools):
     data = {
         'School': [fake.random_element(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']) for _ in range(num_schools)],
@@ -36,7 +37,7 @@ def gen_fake_anova_data(num_students, reject_null_condition=True, normal_distrib
                 if lang in ['UK-English', 'USA-English']:
                     data['Writing-Score'].append(int(np.random.normal(83, 3)))
                 else:
-                    data['Writing-Score'].append(int(np.random.normal(80, 6)))
+                    data['Writing-Score'].append(int(np.random.normal(78, 6)))
             else:
                 data['Writing-Score'].append(int(np.random.exponential(scale=10, size=1)))
         else:
