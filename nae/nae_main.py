@@ -45,7 +45,7 @@ def gen_fake_anova_data(num_students, reject_null_condition=True, normal_distrib
 
     return pd.DataFrame(data)
 
-def student_data_create(reject_null_condition=True, normal_distribution=True): 
+def student_data_create(reject_null_condition=True, normal_distribution=True):
     return gen_fake_anova_data(1000, reject_null_condition, normal_distribution)
 
 def generate_random_values():
