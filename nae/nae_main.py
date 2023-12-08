@@ -48,6 +48,23 @@ def gen_fake_anova_data(num_students, reject_null_condition=True, normal_distrib
 def student_data_create(reject_null_condition=True, normal_distribution=True):
     return gen_fake_anova_data(1000, reject_null_condition, normal_distribution)
 
+def generate_random_values():
+    return fake.random_int(min=0, max=100)
+
+def finance_data_create():
+    # Create a DataFrame
+    rows = ["Pre-Nursery", "Nursery", "Reception", "Early Years", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5",
+            "Year 6", "Primary", "Year 7", "Year 8", "Year 9", "Year 10", "Year 11", "Year 12", "Year 13", "Other",
+            "Secondary", "Total FTE"]
+    columns = ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "FY Avg", "In Year Growth",
+               "In Year Growth %"]
+
+    data = [[generate_random_values() for _ in range(len(columns))] for _ in range(len(rows))]
+
+    df = pd.DataFrame(data, columns=columns, index=rows)
+    print(df.head())
+    sys.exit()
+
 def currency_to_usd(df):
     #todo: use currency converter lib
 
