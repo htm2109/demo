@@ -142,9 +142,9 @@ def box_whisker(df):
 if __name__ == '__main__':
     MODEL = 'DEMO'
     df = data_create(load_new_df=False)
-    # df = investigator(df)
-    # df = check_normality(df)
-    # df = one_way_anova(df)
+    df = investigator(df)
+    df = check_normality(df)
+    df = one_way_anova(df)
     df = tukey_adhoc(df)
     df = effect_size(df)
     df = box_whisker(df)
