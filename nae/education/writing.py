@@ -31,7 +31,7 @@ def data_create(load_new_df=True):
                 pipe(col_cleaner)
         df.pipe(joblib.dump, c.filenamer(f'nae/education/data/{MODEL}_staff_costs.pkl'))
     else:
-        df = joblib.load(c.filenamer(f'nae/education/data/{MODEL}_staff_costs.pkl')) 
+        df = joblib.load(c.filenamer(f'nae/education/data/{MODEL}_staff_costs.pkl'))
     return df
 
 def investigator(df):
