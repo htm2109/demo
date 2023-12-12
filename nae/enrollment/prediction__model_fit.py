@@ -9,8 +9,8 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import RandomizedSearchCV
 
 from tools import helpers__preprocess as hpp, helpers__model_train as hmt, helpers as h
-from constants import constants as c, prediction__constants as pc
-
+# from constants import constants as c, prediction__constants as pc
+from nae.enrollment.constants import constants as c, prediction__constants as pc
 
 pd.set_option('expand_frame_repr', False)
 pd.set_option('display.max_rows', 30000)
@@ -19,6 +19,9 @@ pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
 def training_data_prep(date):
+    df = h.gen_fake_sf_data(load_new_fake_data=True, num_records=40000, data_date=date)
+    print(df.head())
+    sys.exit()
     pd.read_csv(c.filenamer('../data/sf_export6.csv'), encoding='latin-1'). \
         pipe(hpp.stage_fix). \
         pipe(hpp.outcome).\
@@ -99,5 +102,5 @@ def main(data_date):
 
 
 if __name__ == '__main__':
-    data_date = '2023.10.30'
+    data_date = '9_20_23'
     main(data_date)
