@@ -1,4 +1,6 @@
 import pandas as pd
+import numpy as np
+from sklearn.metrics import mean_squared_error as mse
 import datetime as dt
 import seaborn as sns
 from itertools import product
@@ -8,26 +10,6 @@ from matplotlib import pyplot as plt
 from kauffman.data import bfs
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
-
-# CLEAN DATA
-df_whole = bfs(['BA_BA'], obs_level='us') \
-    .sort_values('time') \
-    [['naics', 'time', 'BA_BA']] \
-    .assign(month=lambda x: x.time.dt.month) \
-    .dropna()
-df_whole.index = df_whole.time
-df_whole.index = df_whole.index.to_period('M')
-df = df_whole.query('time < "2020-01-01"')
-
-# EXPLORATORY ANALYSIS
-df.plot('time', 'BA_BA')  # Regular plot
-df.plot('month', 'BA_BA', kind='scatter')  # Monthly patterns (annual seasonality)
-sns.boxplot(x='month', y='BA_BA', data=df)  # Boxplot of annual seasonality
-plot_acf(df.BA_BA.dropna())  # Autocorrelation plot
-
-############## FUNCTIONS ################
-import numpy as np
-from sklearn.metrics import mean_squared_error as mse
 
 
 def graph_preds(predictions_df, pred='predicted_mean', true='BA_BA', lower='lower', upper='upper',

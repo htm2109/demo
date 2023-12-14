@@ -2,8 +2,8 @@ import pandas as pd
 from faker import Faker
 import random
 import numpy as np
+from forex_python.converter import CurrencyRates
 import sys
-# from forex_python.converter import CurrencyRates
 
 fake = Faker()
 
@@ -62,28 +62,57 @@ def finance_data_create():
     data = [[generate_random_values() for _ in range(len(columns))] for _ in range(len(rows))]
 
     df = pd.DataFrame(data, columns=columns, index=rows)
-    print(df.head())
-    sys.exit()
+    return df
 
-def currency_to_usd(df):
-    #todo: use currency converter lib
 
-    # create an instance of CurrencyRates class
-    # c = CurrencyRates()
-    # get the exchange rate from RMB to USD
-    # exchange_rate = c.get_rate('CNY', 'USD')
-    # jenny_exchange_rate = 6.6792
-    # # Multiply each value in the column by the exchange rate
-    # for col in list_of_cols:
-    #     df[col] = df[col] / jenny_exchange_rate
-    region1 = ['A', 'B', 'C', 'D']
-    region2 = ['E', 'F', 'G', 'H']
+def currency_to_usd(df, target_currency):
+    c = CurrencyRates()
+    regions = {
+        'A': 'USD',
+        'B': 'USD',
+        'C': 'USD',
+        'D': 'USD',
+        'E': 'CNY',
+        'F': 'CNY',
+        'G': 'CNY',
+        'H': 'HKD',
+    }
     for col in df.columns:
         if '_cost' in col:
-            for school in region1:
-                mask1 = df['school'] == school
-                df.loc[mask1, col] = df.loc[mask1, col] * 1.013
-            for school in region2:
-                mask2 = df['school'] == school
-                df.loc[mask2, col] = df.loc[mask2, col] / 1.023
+            for school, source_currency in regions.items():
+                mask = df['school'] == school
+                rate = c.get_rate(source_currency, target_currency)
+                if school in ['E', 'F', 'G', 'H']:
+                    df.loc[mask, col] = df.loc[mask, col] * rate
+                else:
+                    df.loc[mask, col] = df.loc[mask, col] / rate
+    return df
+
+
+def gen_fake_survey_data():
+    fake = Faker()
+
+    data = []
+    for _ in range(15000):
+        school = random.choice(['School A', 'School B', 'School C', 'School D', 'School E', 'School F'
+                                'School G', 'School H', 'School I', 'School J', 'School K'])
+        year = 'FY23'
+        parent_number = fake.uuid4()
+        language = random.choice(['English', 'Chinese simplified', 'Chinese Traditional', 'French', 'Korean'])
+        broading = random.choice(['Day School', 'Boarding'])
+        phase = random.choice(['Early / Primary', 'Primary', 'Secondary'])
+        nps_score = random.randint(1, 10)
+        nps_follow_up = fake.sentence()
+        nps_follow_up_translated = fake.sentence()
+        where_school_needs_to_develop_translated = fake.sentence()
+        value_most_about_school_translated = fake.sentence()
+        multiple_children_feedback_translated = fake.sentence()
+
+        row = [school, year, parent_number, language, broading, phase, nps_score, nps_follow_up, nps_follow_up_translated,
+               where_school_needs_to_develop_translated, value_most_about_school_translated, multiple_children_feedback_translated]
+        data.append(row)
+
+    columns = ['school', 'year', 'Parent number', 'Language', 'Broading', 'Phase', 'NPS Score', 'nps_follow_up', 'nps_follow_up_translated',
+               'where_school_needs_to_develop_translated', 'value_most_about_school_translated', 'multiple_children_feedback_translated']
+    df = pd.DataFrame(data, columns=columns)
     return df
