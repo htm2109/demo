@@ -22,8 +22,15 @@ The most impactful project, a machine learning model that forecasts student enro
 ### Staff Cost Efficiency 
 - **Directory:** `demo/nae/cost_efficiency`
   - **Script:** `staff_cost_model.py`
+    - This script demonstrates how I use ML to create counterfactuals
     - Applies Linear Regression to staff-related data for predicting test scores and evaluates model performance with metrics like Mean Squared Error, R-squared, F-statistic, and p-value.
     - Generates a scatter plot of predicted versus actual test scores and saves model results in the nae/cost_efficiency/outputs directory.
+
+### ANOVA Tests: Writing Scores by Native Language
+- **Directory:** `nae/education`
+  - **Script:** `writing.py`
+    - This script was used to teach a Data Science and Statistics lesson at William Jewell College on November 29, 2023. The purpose of the lesson was to introduce ANOVA and demonstrate how I use ANOVA for business intelligence.
+    - The code calculates descriptive statistics, generates histograms, and performs statistical tests, including Shapiro-Wilk for normality, one-way ANOVA, and Tukey's HSD post hoc test.
 
 # Kauffman Foundation
 
