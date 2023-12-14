@@ -8,7 +8,6 @@ from sklearn.model_selection import train_test_split
 
 def _date_time(df):
     date_cols = c.date_columns + c.recent_date_columns
-    # todo: is this right, lead_Date?
     return df.assign(
                 **{
                     col: pd.to_datetime(df[col], format='%d/%m/%Y %H:%M', errors='coerce')
@@ -30,18 +29,10 @@ def _missing_dates_backfill(df):
             opportunity_first_visit_date=lambda x: np.where((x['application_start_date'] == x['application_start_date']) & (x['Opportunity First Visit Date'] != x['Opportunity First Visit Date']), x['application_start_date'], x['Opportunity First Visit Date']),
             lead_date=lambda x: np.where(x['lead_date'].isna(), x['Created Date'], x['lead_date'])
         )
-    print("Non-missing values for 'Created Date':", df['Created Date'].count())
-    print("Non-missing values for 'opportunity_first_visit_date':", df['opportunity_first_visit_date'].count())
-    print("Non-missing values for 'application_start_date':", df['application_start_date'].count())
-    print("Non-missing values for 'acceptance_start_date':", df['acceptance_start_date'].count())
-    print("Non-missing values for 'enrolled_start_date':", df['enrolled_start_date'].count())
-    # sys.exit()
     return df
 
 
 def _wrong_dates_backfill(df):
-    # todo: is created date correct?
-    # todo: in opportunity_first_... change Created Date to lead_date?
     return df.\
         assign(
             lead_date=lambda x: np.where(x['Created Date'] < x['lead_date'], x['Created Date'], x['lead_date']),
@@ -54,7 +45,6 @@ def _wrong_dates_backfill(df):
 
 
 def _kpi_dates(df):
-    # todo: check this again
     return df. \
         pipe(_missing_dates_backfill).\
         pipe(_wrong_dates_backfill)
@@ -87,18 +77,6 @@ def _last_stage_change(df):
 
 
 def _field_filter_update(df):
-    # todo: what is start_date...everyone has one.
-    #   actual or expected
-    # df \
-    #     [
-    #         [
-    #             'Created Date', 'Opportunity First Visit Date', 'Application Start Date', 'Acceptance Start Date', 'Enrolled Start Date', 'Start Date',
-    #             'lead_date', 'opportunity_first_visit_date', 'application_start_date', 'acceptance_start_date', 'enrolled_start_date', 'start_date', 'last_stage_change_date', 'previous_stage_before_lost_denied'
-    #         ]
-    # ].\
-    #     pipe(lambda x: print(x.sample(200))).\
-    #     pipe(sys.exit())
-
     return df.\
         drop(labels=
              [
@@ -162,7 +140,10 @@ def _stage_splitter(df, stage, filename):
         df_subset = df.pipe(_stage_filter, stage)
         y = df_subset['outcome']
         X = df_subset.drop(labels='outcome', axis=1)
-
+        #todo: fix faker data issues
+        print(y)
+        print(X)
+        sys.exit()
         # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
         joblib.dump(X, c.filenamer(f'../data/x{filename}.pkl'))
         joblib.dump(y, c.filenamer(f'../data/y{filename}.pkl'))

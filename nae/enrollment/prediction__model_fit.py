@@ -9,7 +9,6 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import RandomizedSearchCV
 
 from tools import helpers__preprocess as hpp, helpers__model_train as hmt, helpers as h
-# from constants import constants as c, prediction__constants as pc
 from nae.enrollment.constants import constants as c, prediction__constants as pc
 
 pd.set_option('expand_frame_repr', False)
@@ -17,25 +16,29 @@ pd.set_option('display.max_rows', 30000)
 pd.set_option('max_colwidth', 4000)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
-
-def training_data_prep(date):
-    df = h.gen_fake_sf_data(load_new_fake_data=True, num_records=40000, data_date=date)
+def training_data_prep(date, load_new_fake_data):
+    df = h.gen_fake_sf_data(load_new_fake_data=load_new_fake_data, num_records=40000, data_date=date)
+    df.\
+        pipe(hpp.stage_fix). \
+        pipe(hpp.outcome). \
+        pipe(hpp.splitter, date)
     print(df.head())
     sys.exit()
-    pd.read_csv(c.filenamer('../data/sf_export6.csv'), encoding='latin-1'). \
-        pipe(hpp.stage_fix). \
-        pipe(hpp.outcome).\
-        pipe(hpp.splitter, date)
+    # sys.exit()
+    # pd.read_csv(c.filenamer('../data/sf_export6.csv'), encoding='latin-1'). \
+    #     pipe(hpp.stage_fix). \
+    #         pipe(hpp.outcome).\
+    #             pipe(hpp.splitter, date)
 
 
 def scratch__pipeline_test(X_train, stage):
     print(stage)
     X_train.\
         pipe(hmt.raw_preprocess).\
-        pipe(hmt.features_create).\
-        pipe(hmt.field_filter, stage).\
-        reset_index(drop=True).\
-        pipe(lambda x: print(x.info(verbose=True, show_counts=True)))
+            pipe(hmt.features_create).\
+                pipe(hmt.field_filter, stage).\
+                    reset_index(drop=True).\
+                        pipe(lambda x: print(x.info(verbose=True, show_counts=True)))
 
     input('\n\nNext stage?')
 
@@ -44,7 +47,9 @@ def model_train(stage, date, pipeline_test=False):
     print(f'Model train for {stage}...\n')
     X_train = joblib.load(c.filenamer(f'../data/xtrain_{stage}__{date}.pkl'))
     y_train = joblib.load(c.filenamer(f'../data/ytrain_{stage}__{date}.pkl'))
-
+    print(X_train.head())
+    print(y_train.head())
+    sys.exit()
     if pipeline_test:
         scratch__pipeline_test(X_train, stage)
     else:
@@ -91,7 +96,7 @@ def model_validate():
 
 
 def main(data_date):
-    training_data_prep(data_date)
+    training_data_prep(data_date, load_new_fake_data=False)
     start_time = time.time()
     for stage in c.ordered_pipeline:
         # model_train(stage, data_date, pipeline_test=True)

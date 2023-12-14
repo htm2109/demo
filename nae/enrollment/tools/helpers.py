@@ -8,6 +8,7 @@ from sklearn import tree
 import matplotlib.pyplot as plt
 from faker import Faker
 import random
+from random import choices
 import pickle
 from nae.enrollment.constants import constants as c
 
@@ -132,7 +133,6 @@ def gen_fake_sf_data(num_records, data_date, load_new_fake_data=True):
         fake = Faker()
         random.seed(42)
         rows = []
-        # TODO: use random.choice(["Male", "Female", ""]), to hard code
         for _ in range(num_records):
             row = {
                 "Opportunity ID": fake.uuid4(),
@@ -142,15 +142,15 @@ def gen_fake_sf_data(num_records, data_date, load_new_fake_data=True):
                 "Child Birthdate": fake.date_of_birth(minimum_age=2, maximum_age=18).strftime("%d/%m/%Y"),
                 "Child Current Age": round(random.uniform(2, 18), 1),
                 "Child Gender": random.choice(["Male", "Female", "Other", "Unknown"]),
-                "Account Record Type": fake.word(),
-                "Parent Country of Residence": fake.country(),
-                "Country": fake.country(),
-                "Relocation City": fake.city(),
-                "Parent Nationality": fake.word(),
-                "Parent Preferred Language": fake.language_code(),
-                "Billing Country": fake.country(),
+                "Account Record Type": random.choice(["Family", "External Relationships"]),
+                "Parent Country of Residence": random.choice(["China", "Hong Kong SAR", "South Korea", "United Kingdom", "United States of America", "Other"]),
+                "Country": random.choice(["China", "Hong Kong SAR", "South Korea", "United Kingdom", "United States of America", "Other"]),
+                "Relocation City": random.choice(["UK", "Singapore", "Australia", "US", "Other"]),
+                "Parent Nationality": random.choice(["American", "British", "Chinese", "Chinese - Hong Kong", "South Korean", "Other"]),
+                "Parent Preferred Language": random.choice(["Chinese", "English", "German", "Korean", "Other"]),
+                "Billing Country": random.choice(["China", "Hong Kong SAR", "South Korea", "United Kingdom", "United States of America", "Other"]),
                 "Opportunity Record Type": fake.word(),
-                "Stage": fake.word(),
+                "Stage": random.choice(["Enquiry", "Visit", "Application", "Acceptance", "Enrolled", "Started", "Denied", "Lost"]),
                 "Created Date": fake.date_time_this_decade().strftime("%d/%m/%Y"),
                 "Stage Duration": random.randint(0, 365),
                 "Last Stage Change Date": fake.date_time_this_decade().strftime("%d/%m/%Y"),
@@ -165,18 +165,22 @@ def gen_fake_sf_data(num_records, data_date, load_new_fake_data=True):
                 "Won": random.choice([0, 1]),
                 "Age": random.randint(0, 100),
                 "Days since last Activity": random.randint(0, 365),
-                "School of Interest": fake.company(),
+                "School of Interest": random.choice(["A", "B", "C", "D", "E", "F", "G", "H"]),
                 "Opportunity Owner": fake.name(),
-                "Year/Grade": fake.word(),
+                "Year/Grade": random.choice(["Pre-Nursery", "Nursery", "Reception", "Year 1", "Year 2", "Year 3",
+                                                "Year 4", "Year 5", "Year 6", "Year 7", "Year 8", "Year 9",
+                                                "Year 10", "Year 11", "Year 12", "Year 13", "Other"]),
                 "Enrolment Month": fake.month(),
-                "Fiscal Year": fake.year(),
-                "Lead Source": fake.word(),
+                "Fiscal Year": random.choice([2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2050, "Other"]),
+                "Lead Source": random.choice(["Agent", "Call", "Direct", "Email", "Events", "External Relationships",
+                                                "Offline", "Online", "Organic Social", "Paid_Referral", "Paid Social",
+                                                "Referral", "Walk-In", "Word of mouth", "Other"]),
                 "Staff Child": random.choice([0, 1]),
                 "Probability (%)": random.randint(0, 100),
-                "Previous Stage Before Lost/Denied": fake.word(),
-                "Child Native Language": fake.language_code(),
+                "Previous Stage Before Lost/Denied": random.choice(["Enquiry", "Visit", "Application", "Acceptance", "Enrolled", "Started"]),
+                "Child Native Language": random.choice(["Chinese", "English", "German", "Korean", "Cantonese", "Japanese", "Other"]),
                 "Child Student ID": fake.uuid4(),
-                "Child Nationality": fake.word(),
+                "Child Nationality": random.choice(["American", "Australian", "British", "Canadian", "Chinese", "South Korean", "Other"]),
                 "Full Account ID": fake.uuid4(),
                 "Account Name": fake.company(),
                 "Lead Method": fake.word(),
@@ -200,6 +204,25 @@ def gen_fake_sf_data(num_records, data_date, load_new_fake_data=True):
             for col in ['Child Birthdate', 'Gender', 'Probability (%)', 'Lead Source', 'Fiscal Year', 'Child Nationality']:
                 if random.random() < 0.1:
                     row[col] = np.nan
+            # Define corresponding coverage percentages
+            coverage_percentages = {
+                "Enquiry Start Date": 1.0,
+                "Visit Start Date": 1.0,
+                "Opportunity First Visit Date": 0.8,
+                "Application Start Date": 0.6,
+                "Acceptance Start Date": 0.4,
+                "Enrolled Start Date": 0.2,
+                "Start Date": 1.0,
+            }
+
+            generated_dates = {
+                field: (
+                    fake.date_time_this_decade().strftime("%d/%m/%Y %H:%M")
+                    if choices([True, False], weights=[coverage_percentages[field], 1 - coverage_percentages[field]])[0]
+                    else ""
+                )
+                for field in coverage_percentages.keys()
+            }
             rows.append(row)
 
         df = pd.DataFrame(rows)
