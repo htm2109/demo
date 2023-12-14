@@ -5,7 +5,7 @@ Each of the projects includes subfolders for the respective data and outputs. Mo
 
 The most impactful project, a machine learning model that forecasts student enrollment, can be found at: `demo/nae/enrollment`
 
-# Nord Anglia Education
+# Nord Anglia
 
 ### ML Enrollment Forecasts
 - **Directory:** `demo/nae/enrollment`
