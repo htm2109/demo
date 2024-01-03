@@ -1,5 +1,5 @@
 # Overview
-This repository includes examples of projects from past work projects. The purpose is to demonstrate the Python code used to conduct research, create forecasts, and perform other data science tasks. Each directory in this repo uses publicly available information and the Python library `faker`.  
+This repository includes examples of projects from past work. The purpose is to demonstrate the Python code used to conduct research, create forecasts, and perform other data science tasks. Each project in this repo uses synthetic data generated from the Python library `faker` and other publicly available information.  
 
 The most impactful project, a machine learning (ML) model that forecasts student enrollment, can be found at: `demo/nae/enrollment`
 
