@@ -42,10 +42,9 @@ Each of the projects includes subfolders for the respective data and outputs. Mo
 
 # Independent Projects
 
-### ARIMA Model Forecasting New Business Applications 
+### Tools to work with large data and files
 - **Directory:** `demo/independent`
   - **Script:** `file_mover.py`
-    - Demonstrates tools that can be used to work with large data and files
     - Fetches data from a public API (JSONPlaceholder) using the requests library and saves it as a JSON file. 
     - Implements shutil to move files between locations, creating directories if necessary.
         
