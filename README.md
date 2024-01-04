@@ -40,4 +40,12 @@ Each of the projects includes subfolders for the respective data and outputs. Mo
     - Implements an ARIMA model for business application forecasting, conducting cross-validation and providing year-by-year predictions. 
     - Utilizes statistical metrics like RMSE and MAE for model evaluation, and includes functions for data exploration and visualization.
 
+# Independent Projects
+
+### ARIMA Model Forecasting New Business Applications 
+- **Directory:** `demo/independent`
+  - **Script:** `file_mover.py`
+    - Demonstrates tools that can be used to work with large data and files 
+    - Uses the faker library to generate a large dataset, msgpack library to serialize and deserialize data, and shutil to move the saved .msgpack files between locations.  
+    
   
