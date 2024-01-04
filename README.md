@@ -45,7 +45,8 @@ Each of the projects includes subfolders for the respective data and outputs. Mo
 ### ARIMA Model Forecasting New Business Applications 
 - **Directory:** `demo/independent`
   - **Script:** `file_mover.py`
-    - Demonstrates tools that can be used to work with large data and files 
-    - Uses the faker library to generate a large dataset, msgpack library to serialize and deserialize data, and shutil to move the saved .msgpack files between locations.  
-    
+    - Demonstrates tools that can be used to work with large data and files
+    - Fetches data from a public API (JSONPlaceholder) using the requests library and saves it as a JSON file. 
+    - Implements shutil to move files between locations, creating directories if necessary.
+        
   
