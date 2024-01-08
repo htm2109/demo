@@ -5,13 +5,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import f
 from nae import nae_main as nae
 import joblib
-import pickle
-import statsmodels.api as sm
-import warnings
-import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-import matplotlib.ticker as ticker
 import constants as c
 import seaborn as sns
 import os
@@ -111,7 +105,6 @@ def model(df):
     df = df[['school'] + X_columns + ['test_scores', 'predicted', 'diff']]
     print(df)
     c.saver(df, 'nae/cost_efficiency/outputs/staff_cost_preds.xlsx')
-    # sys.exit()
     #TODO: use dummy for school in question (maybe school specific effects that are not captured)
     plotter(df)
 

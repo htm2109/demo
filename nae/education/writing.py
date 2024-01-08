@@ -35,12 +35,9 @@ def data_create(load_new_df=True):
     return df
 
 def investigator(df):
-
-    # Descriptive Statistics
     print("\nDescriptive Statistics:")
     print(df.groupby('native_language')['writing_score'].describe())
 
-    # Histograms with side-by-side bars
     plt.figure(figsize=(12, 6))
     sns.histplot(data=df, x='writing_score', hue='native_language', bins=20, kde=True, multiple="dodge")
     plt.title('Distribution of Writing Scores by Native Language')
@@ -54,11 +51,9 @@ def check_normality(df):
     print("Skewness measures the asymmetry of the distribution. Positive skewness indicates a right-skewed distribution, and negative skewness indicates a left-skewed distribution.")
     print("Kurtosis measures the tail heaviness of the distribution. Positive kurtosis indicates heavy tails, and negative kurtosis indicates light tails. \n ")
 
-    # Shapiro-Wilk test for normality
     for lang in df['native_language'].unique():
         subset = df[df['native_language'] == lang]['writing_score']
         stat_sw, p_value_sw = stats.shapiro(subset)
-        # Calculate skewness and kurtosis
         skewness = stats.skew(subset)
         kurtosis = stats.kurtosis(subset)
 
@@ -73,30 +68,22 @@ def one_way_anova(df):
     k = len(df['native_language'].unique())
     N = len(df['writing_score'])
 
-    # Calculate degrees of freedom
     df_between = k - 1
     df_within = N - k
 
-    # Significance level (alpha)
     alpha = 0.05
 
-    # Critical value from the F-distribution table
     critical_value = stats.f.ppf(1 - alpha, df_between, df_within)
 
-    # Perform one-way ANOVA
     anova_results = stats.f_oneway(
         *[df[df['native_language'] == lang]['writing_score'] for lang in df['native_language'].unique()])
 
-    # Print results
     print(f"F-statistic: {anova_results.statistic}")
     print(f"Degrees of Freedom (Between): {df_between}")
     print(f"Degrees of Freedom (Within): {df_within}")
     print(f"Critical Value: {critical_value}")
     print(f"P-value: {anova_results.pvalue}")
 
-    # sys.exit()
-
-    # Interpretation
     if anova_results.pvalue < alpha:
         print("\nThe p-value is less than 0.05, suggesting that there are significant differences in writing scores across native languages.")
     else:
@@ -108,7 +95,6 @@ def one_way_anova(df):
     return df
 
 def tukey_adhoc(df):
-    # Perform Tukey's HSD post hoc test
     tukey_results = pairwise_tukeyhsd(df['writing_score'], df['native_language'])
     print("Tukey's HSD Post Hoc Test:\n" + str(tukey_results) + "\n")
     return df
@@ -119,7 +105,6 @@ def effect_size(df):
         pooled_std = ((stdev(group1) ** 2 + stdev(group2) ** 2) / 2) ** 0.5
         return diff / pooled_std
 
-    # Calculate Cohen's d for each pair of groups
     languages = df['native_language'].unique()
     for i in range(len(languages)):
         for j in range(i + 1, len(languages)):
